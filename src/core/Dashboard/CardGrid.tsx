@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useContext } from "react";
 import { CardGridWrapper } from "./Dashboard.styles";
 import InfoCard from "./InfoCard";
 import { FaUsersCog, FaUsers } from "react-icons/fa";
+import { AppContext } from "@/provider/AppProvider";
 const CardGrid = () => {
+  const { getEmployeeCount } = useContext(AppContext);
   return (
     <CardGridWrapper>
       <InfoCard
@@ -15,7 +17,7 @@ const CardGrid = () => {
         background="#FFAC1C"
         cardName="Employee"
         icon={<FaUsers size={24} />}
-        number="100"
+        number={getEmployeeCount()}
       />
     </CardGridWrapper>
   );

@@ -1,8 +1,14 @@
 import Input from "@/components/FormComponents/Input";
+import DeleteModal from "@/components/Modals/DeleteModal";
+import OffCanvas from "@/components/OffCanvas/OffCanvas";
 import Table from "@/components/Table/Table";
 import TableActions from "@/components/Table/TableActions";
 import useBoolean from "@/helpers/hooks/useBoolean";
-import { ColumnDef } from "@tanstack/react-table";
+import { AppContext } from "@/provider/AppProvider";
+import { ColumnDef, Row } from "@tanstack/react-table";
+import { useRouter } from "next/router";
+import { useContext } from "react";
+import { FaPen } from "react-icons/fa";
 import { FiSearch } from "react-icons/fi";
 import { IoMdAdd } from "react-icons/io";
 import {
@@ -19,43 +25,50 @@ import {
   EmployeeSearchBar,
   HorizontalLine,
 } from "./Employee.styles";
-import DeleteModal from "@/components/Modals/DeleteModal";
-import OffCanvas from "@/components/OffCanvas/OffCanvas";
-import { FaPen } from "react-icons/fa";
-import { useRouter } from "next/router";
-
+import { IEmployeeData } from "./Employee.schema";
 const EmployeeTable = () => {
   const { toggle: toggleModal, value: isOpen } = useBoolean();
   const { toggle: toggleCanvas, value: isCanvasOpen } = useBoolean();
+  const { employees, deleteEmployee } = useContext(AppContext);
   const router = useRouter();
-  const defaultColumns: ColumnDef<any>[] = [
+  const defaultColumns: ColumnDef<IEmployeeData>[] = [
     {
       header: "ID",
-      accessorKey: "id",
+      cell: ({ row: { index } }: { row: Row<IEmployeeData> }) => index + 1,
     },
     {
       header: "Full Name",
-      accessorKey: "id",
+      cell: ({ row }: { row: Row<IEmployeeData> }) => {
+        return (
+          <>
+            {[row.original.name, row.original.middleName, row.original.surName]
+              .filter(Boolean)
+              .join(" ")}
+          </>
+        );
+      },
     },
     {
       header: "Current Team",
-      accessorKey: "id",
+      cell: ({ row }: { row: Row<IEmployeeData> }) => {
+        return <>{row.original.team ? row.original.team : "Available"}</>;
+      },
     },
     {
       header: "Mobile Number",
-      accessorKey: "id",
+      accessorKey: "phoneNumber",
     },
     {
       header: "Email Address",
-      accessorKey: "id",
+      accessorKey: "email",
     },
     {
       header: "Designation",
-      accessorKey: "id",
+      accessorKey: "position",
     },
     {
       header: "Billable Hours",
-      accessorKey: "id",
+      accessorKey: "billableHours",
     },
     {
       header: "Actions",
@@ -140,13 +153,13 @@ const EmployeeTable = () => {
         toggleModal={toggleCanvas}
       />
       <EmployeeSearchBar>
-        <Input icon={<FiSearch />} placeholder="Search Item" />
+        <Input icon={<FiSearch />} placeholder="Search Item" name="search" />
         <AddEmployeeButton href={"/employee/add"}>
           <IoMdAdd size={24} />
           Add Employee
         </AddEmployeeButton>
       </EmployeeSearchBar>
-      <Table<any> columns={defaultColumns} data={[{ id: "1" }, { id: "1" }]} />
+      <Table<any> columns={defaultColumns} data={employees || []} />
     </>
   );
 };

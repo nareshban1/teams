@@ -31,3 +31,7 @@ export const Label = styled.label`
   font-size: 1rem;
   margin-bottom: 0.625rem;
 `;
+
+export const ValidationText = styled.span`
+  color: red;
+`;

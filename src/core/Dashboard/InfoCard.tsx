@@ -16,7 +16,7 @@ const InfoCard = ({
   background: string;
   icon: ReactNode;
   cardName: string;
-  number: string;
+  number: string | number;
 }) => {
   return (
     <InfoCardWrapper backgroundColor={background}>
