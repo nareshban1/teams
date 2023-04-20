@@ -17,10 +17,13 @@ import {
   SaveButton,
 } from "../Employee/Employee.styles";
 import {
+  EmployeeBadgeContainer,
+  EmployeeSelectBadge,
   TeamMemberContainer,
   TeamMemberSelect,
   TeamMembersWrapperGrid,
 } from "./Team.styles";
+import { RxCross2 } from "react-icons/rx";
 const TeamForm = () => {
   const fileRef = useRef<HTMLInputElement>(null);
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -73,6 +76,11 @@ const TeamForm = () => {
                       options={[]}
                       placeholder="Select Employees"
                     />
+                    <EmployeeBadgeContainer>
+                      <EmployeeSelectBadge>
+                        Name <RxCross2 size={16} />
+                      </EmployeeSelectBadge>
+                    </EmployeeBadgeContainer>
                   </TeamMemberContainer>
                 </TeamMembersWrapperGrid>
                 <InputGrid>

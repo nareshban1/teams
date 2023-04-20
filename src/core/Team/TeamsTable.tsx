@@ -7,10 +7,11 @@ import { IoMdAdd } from "react-icons/io";
 import { AddTeamButton, TeamsSearchBar } from "./Team.styles";
 import DeleteModal from "@/components/Modals/DeleteModal";
 import useBoolean from "@/helpers/hooks/useBoolean";
+import { useRouter } from "next/router";
 
 const TeamsTable = () => {
   const { toggle: toggleModal, value: isOpen } = useBoolean();
-
+  const router = useRouter();
   const defaultColumns: ColumnDef<any>[] = [
     {
       header: "Team Name",
@@ -37,7 +38,9 @@ const TeamsTable = () => {
             handleDelete={() => {
               toggleModal();
             }}
-            handleEdit={() => {}}
+            handleEdit={() => {
+              router.push("/team/edit/teamId");
+            }}
           />
         );
       },

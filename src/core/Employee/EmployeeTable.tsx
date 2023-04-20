@@ -22,10 +22,12 @@ import {
 import DeleteModal from "@/components/Modals/DeleteModal";
 import OffCanvas from "@/components/OffCanvas/OffCanvas";
 import { FaPen } from "react-icons/fa";
+import { useRouter } from "next/router";
 
 const EmployeeTable = () => {
   const { toggle: toggleModal, value: isOpen } = useBoolean();
   const { toggle: toggleCanvas, value: isCanvasOpen } = useBoolean();
+  const router = useRouter();
   const defaultColumns: ColumnDef<any>[] = [
     {
       header: "ID",
@@ -63,7 +65,9 @@ const EmployeeTable = () => {
             handleDelete={() => {
               toggleModal();
             }}
-            handleEdit={() => {}}
+            handleEdit={() => {
+              router.push("/employee/edit/teamId");
+            }}
             handleView={() => {
               toggleCanvas();
             }}
@@ -86,7 +90,7 @@ const EmployeeTable = () => {
       <OffCanvas
         body={
           <>
-            <EmployeeImageView alt={""} src={""} />
+            <EmployeeImageView alt={""} src={""} className="employee-margin" />
             <EmployeeName>Naresh Ban</EmployeeName>
             <EmployeeEmail>demo@gmail.com</EmployeeEmail>
             <DesignationBadge>Employee</DesignationBadge>
@@ -125,7 +129,7 @@ const EmployeeTable = () => {
                 <EmployeeDetail></EmployeeDetail>
               </EmployeeDetailContainer>
             </EmployeeDetailGrid>
-            <EditProfileButton>
+            <EditProfileButton href={"/employee/edit/empId"}>
               <FaPen size={16} />
               Edit Profile
             </EditProfileButton>

@@ -199,6 +199,7 @@ export const EmployeeName = styled.p`
   color: #24252a;
   font-size: 1.25rem;
   font-weight: 800;
+  margin-top: 1.875rem;
 `;
 export const EmployeeEmail = styled.p`
   font-size: 1rem;
@@ -239,7 +240,7 @@ export const DesignationBadge = styled.p`
   margin-top: 1.125rem;
 `;
 
-export const EditProfileButton = styled.button`
+export const EditProfileButton = styled(Link)`
   display: flex;
   align-items: center;
   justify-content: center;

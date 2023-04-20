@@ -1,4 +1,5 @@
 import { BreadCrumb, ScreenName } from "@/core/Employee/Employee.styles";
+import EmployeeForm from "@/core/Employee/EmployeeForm";
 import { useRouter } from "next/router";
 import { MdKeyboardArrowRight } from "react-icons/md";
 
@@ -13,6 +14,7 @@ const EditEmployee = () => {
         <MdKeyboardArrowRight size={24} color="#929295" /> Edit Employee
       </BreadCrumb>
       <ScreenName>Edit Employee</ScreenName>
+      <EmployeeForm />
     </>
   );
 };

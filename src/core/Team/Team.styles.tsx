@@ -42,3 +42,20 @@ export const TeamMemberSelect = styled(Select)`
   width: 60%;
   margin-bottom: 1rem;
 `;
+
+export const EmployeeBadgeContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  align-items: start;
+`;
+
+export const EmployeeSelectBadge = styled.span`
+  padding: 0.5rem 0.75rem;
+  border-radius: 1.125rem;
+  border: 1px solid #c3c1bf;
+  color: #656669;
+  background-color: #f1f1f1;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+`;
