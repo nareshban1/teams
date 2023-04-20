@@ -1,5 +1,6 @@
 import React, { PropsWithChildren } from "react";
 import {
+  BackButton,
   Content,
   SideBarLayout,
   Sidebar,
@@ -7,6 +8,7 @@ import {
   TopBarContentWrapper,
   TopBarText,
 } from "./MainLayout.styles";
+import { IoMdArrowBack } from "react-icons/io";
 
 const MainLayout = ({ children }: PropsWithChildren) => {
   return (
@@ -14,6 +16,9 @@ const MainLayout = ({ children }: PropsWithChildren) => {
       <Sidebar>SIDEBAR</Sidebar>
       <TopBarContentWrapper>
         <TopBar>
+          <BackButton>
+            <IoMdArrowBack />
+          </BackButton>
           <TopBarText>NAVIGATION BAR</TopBarText>
         </TopBar>
         <Content>{children}</Content>

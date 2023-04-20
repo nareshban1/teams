@@ -43,5 +43,7 @@ export const ComponentName = styled.h1`
 `;
 
 export const DashboardWrapper = styled.section`
-  padding: 0 1.25rem;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
 `;

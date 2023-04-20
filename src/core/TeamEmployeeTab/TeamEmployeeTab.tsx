@@ -1,11 +1,14 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import {
   TabActiveBar,
   TabButton,
   TabButtonText,
   TabContainer,
+  TabContent,
   TabWrapper,
 } from "./TeamEmployee.styles";
+import EmployeeTable from "../Employee/EmployeeTable";
+import TeamsTable from "../Team/TeamsTable";
 
 const tabs = [
   { name: "Team", id: 1 },
@@ -18,6 +21,15 @@ const TeamEmployeeTab = () => {
   const toggleTab = (id: number) => {
     setActiveTab(id);
   };
+
+  const renderTabContent = useCallback(() => {
+    switch (activeTab) {
+      case 1:
+        return <TeamsTable />;
+      case 2:
+        return <EmployeeTable />;
+    }
+  }, [activeTab]);
 
   return (
     <TabContainer>
@@ -34,7 +46,8 @@ const TeamEmployeeTab = () => {
             <TabActiveBar active={activeTab === tab.id} />
           </TabButton>
         ))}
-      </TabWrapper>{" "}
+      </TabWrapper>
+      <TabContent>{renderTabContent()}</TabContent>
     </TabContainer>
   );
 };
