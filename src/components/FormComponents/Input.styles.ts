@@ -10,6 +10,7 @@ export const InputContainer = styled.div`
   border: 1px solid #ccc;
   border-radius: 0.313rem;
   padding: 0.5rem;
+  width: 100%;
 `;
 
 export const InputIcon = styled.span`
@@ -22,6 +23,7 @@ export const InputElement = styled.input`
   border: none;
   outline: none;
   font-size: 1rem;
+  width: 100%;
 `;
 
 export const Label = styled.label`

@@ -8,11 +8,16 @@ import {
 interface IFormLayoutProps {
   leftContent: ReactNode;
   rightContent: ReactNode;
+  className?: string;
 }
 
-const FormLayout = ({ leftContent, rightContent }: IFormLayoutProps) => {
+const FormLayout = ({
+  leftContent,
+  rightContent,
+  className,
+}: IFormLayoutProps) => {
   return (
-    <FormLayoutContainer>
+    <FormLayoutContainer className={className}>
       <LeftFormContainer>{leftContent}</LeftFormContainer>
       <RightFormContainer>{rightContent}</RightFormContainer>
     </FormLayoutContainer>

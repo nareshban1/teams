@@ -18,6 +18,7 @@ const TableActions = (props: ITableActionProps) => {
           background="#20BC081A"
           color="#20BC08"
           border="#20BC081A"
+          onClick={handleView}
         >
           <FaEye size={16} />
         </ActionIconContainer>
@@ -27,6 +28,7 @@ const TableActions = (props: ITableActionProps) => {
           background="#1E83F71A"
           color="#1E83F7"
           border="#1E83F733"
+          onClick={handleEdit}
         >
           <FaPen size={16} />
         </ActionIconContainer>
@@ -36,6 +38,7 @@ const TableActions = (props: ITableActionProps) => {
           background="#F71E1E1A"
           color="#F71E1E"
           border="#F71E1E1A"
+          onClick={handleDelete}
         >
           <MdDelete size={20} />
         </ActionIconContainer>

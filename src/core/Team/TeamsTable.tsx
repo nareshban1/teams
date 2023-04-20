@@ -5,8 +5,12 @@ import { ColumnDef } from "@tanstack/react-table";
 import { FiSearch } from "react-icons/fi";
 import { IoMdAdd } from "react-icons/io";
 import { AddTeamButton, TeamsSearchBar } from "./Team.styles";
+import DeleteModal from "@/components/Modals/DeleteModal";
+import useBoolean from "@/helpers/hooks/useBoolean";
 
 const TeamsTable = () => {
+  const { toggle: toggleModal, value: isOpen } = useBoolean();
+
   const defaultColumns: ColumnDef<any>[] = [
     {
       header: "Team Name",
@@ -28,15 +32,30 @@ const TeamsTable = () => {
     {
       header: "Actions",
       cell: () => {
-        return <TableActions handleDelete={() => {}} handleEdit={() => {}} />;
+        return (
+          <TableActions
+            handleDelete={() => {
+              toggleModal();
+            }}
+            handleEdit={() => {}}
+          />
+        );
       },
     },
   ];
   return (
     <>
+      <DeleteModal
+        isOpen={isOpen}
+        modalBody={""}
+        modalTitle="Delete Team"
+        onCancel={() => {}}
+        onSubmit={() => {}}
+        toggleModal={toggleModal}
+      />
       <TeamsSearchBar>
         <Input icon={<FiSearch />} placeholder="Search Item" />
-        <AddTeamButton>
+        <AddTeamButton href={"/team/add"}>
           <IoMdAdd size={24} />
           Add Team
         </AddTeamButton>

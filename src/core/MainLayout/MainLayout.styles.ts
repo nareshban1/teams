@@ -1,3 +1,4 @@
+import Link from "next/link";
 import styled from "styled-components";
 
 export const SideBarLayout = styled.div`
@@ -19,6 +20,7 @@ export const TopBarContentWrapper = styled.section`
   flex-grow: 1;
   height: 100%;
   background-color: "";
+  flex-shrink: 0;
 `;
 export const TopBar = styled.nav`
   height: 4rem;
@@ -28,6 +30,7 @@ export const TopBar = styled.nav`
   position: relative;
   align-items: center;
   padding: 0 1.375rem;
+  flex-shrink: 0;
 `;
 
 export const TopBarText = styled.div`
@@ -41,15 +44,17 @@ export const TopBarText = styled.div`
   align-items: center;
   color: #00000066;
   justify-content: center;
+  z-index: 0;
 `;
 export const Content = styled.main`
   display: flex;
   flex-grow: 1;
   flex-direction: column;
   padding: 0 1.375rem;
+  position: relative;
 `;
 
-export const BackButton = styled.span`
+export const BackButton = styled(Link)`
   cursor: pointer;
   height: 2rem;
   width: 2rem;
@@ -60,4 +65,5 @@ export const BackButton = styled.span`
   border-radius: 0.313rem;
   background-color: transparent;
   color: #656669;
+  z-index: 10;
 `;
