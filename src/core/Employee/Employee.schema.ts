@@ -1,6 +1,7 @@
 import * as Yup from "yup";
 
 export interface IEmployeeData {
+  id?: number;
   name: string;
   middleName: string;
   surName: string;
@@ -17,9 +18,11 @@ export interface IEmployeeData {
   isBillable: boolean;
   billableHours: string;
   photo: string;
+  role: string;
+  startDate: string;
 }
 
-export const employeeInitialData = {
+export const employeeInitialData: IEmployeeData = {
   name: "",
   middleName: "",
   surName: "",
@@ -36,6 +39,9 @@ export const employeeInitialData = {
   isBillable: false,
   billableHours: "",
   photo: "",
+  role: "",
+
+  startDate: "",
 };
 
 export const employeeValidationSchema = Yup.object({

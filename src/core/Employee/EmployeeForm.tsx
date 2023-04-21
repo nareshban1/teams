@@ -6,7 +6,7 @@ import { InputWrapper, Label } from "@/components/FormComponents/Input.styles";
 import ValidationMessage from "@/components/FormComponents/ValidationMessage";
 import { AppContext } from "@/provider/AppProvider";
 import { useFormik } from "formik";
-import React, { useContext, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { IoMdCloudUpload } from "react-icons/io";
 import Select from "react-select";
 import {
@@ -33,9 +33,20 @@ import {
   SaveButton,
   UploadProfileImageButton,
 } from "./Employee.styles";
+import { useRouter } from "next/router";
 const EmployeeForm = () => {
   const [formData, setFormData] = useState(employeeInitialData);
-  const { addEmployee } = useContext(AppContext);
+  const { addEmployee, getEmployee } = useContext(AppContext);
+  const router = useRouter();
+  console.log(router.query.id);
+
+  useEffect(() => {
+    if (router.query.id && !Array.isArray(router.query.id)) {
+      const empData = getEmployee(Number(router.query.id));
+      console.log(empData);
+      if (empData) setFormData(empData);
+    }
+  }, [getEmployee, router.query.id]);
 
   const {
     errors,
@@ -47,13 +58,30 @@ const EmployeeForm = () => {
     setFieldValue,
   } = useFormik({
     initialValues: formData,
+    enableReinitialize: true,
     validationSchema: employeeValidationSchema,
     validateOnChange: true,
     validateOnBlur: true,
-    onSubmit: (values) => {
+    onSubmit: (values, { resetForm }) => {
       if (values) {
-        console.log(values);
-        addEmployee(values);
+        if (router.query.id) {
+          //update logic remaining
+        } else {
+          console.log(values);
+          const newEmployeeData = {
+            ...values,
+            id: Date.now(),
+            fullName: [values.name, values.middleName, values.surName]
+              .filter(Boolean)
+              .join(" "),
+            role: "Staff",
+            startDate: new Date().toLocaleDateString(),
+          };
+          addEmployee(newEmployeeData);
+        }
+
+        resetForm();
+        router.push("/");
       }
     },
   });
@@ -80,7 +108,12 @@ const EmployeeForm = () => {
             className="form-margin"
             leftContent={
               <FlexCenteredWrapper right>
-                <EmployeeImageView src={UserAvatar} alt="employee-image" />
+                <EmployeeImageView
+                  src={values?.photo ?? UserAvatar}
+                  alt="employee-image"
+                  width={120}
+                  height={120}
+                />
               </FlexCenteredWrapper>
             }
             rightContent={
@@ -138,6 +171,7 @@ const EmployeeForm = () => {
                     errors={errors}
                     touched={touched}
                     onChange={handleChange}
+                    value={values.middleName}
                   />
                   <Input
                     placeholder="Enter Surname"
@@ -146,6 +180,7 @@ const EmployeeForm = () => {
                     errors={errors}
                     onChange={handleChange}
                     touched={touched}
+                    value={values.surName}
                   />
                   <Input
                     placeholder="DD/MM/YYYY"
@@ -155,6 +190,7 @@ const EmployeeForm = () => {
                     errors={errors}
                     touched={touched}
                     onChange={handleChange}
+                    value={values.birthDate}
                   />
                   <InputWrapper>
                     <Label>Gender</Label>
@@ -168,6 +204,11 @@ const EmployeeForm = () => {
                       onChange={(e) => {
                         setFieldValue("gender", e?.value ?? "");
                       }}
+                      value={[
+                        { label: "Male", value: "Male" },
+                        { label: "Female", value: "Female" },
+                        { label: "Other", value: "Others" },
+                      ].find((gender) => gender.value === values?.gender)}
                     />
                     <ValidationMessage
                       errors={errors}
@@ -183,6 +224,7 @@ const EmployeeForm = () => {
                     errors={errors}
                     touched={touched}
                     onChange={handleChange}
+                    value={values.address}
                   />
                   <Input
                     placeholder="Enter Phone Number"
@@ -191,6 +233,7 @@ const EmployeeForm = () => {
                     errors={errors}
                     touched={touched}
                     onChange={handleChange}
+                    value={values.phoneNumber}
                   />
                   <Input
                     placeholder="Enter Email Address"
@@ -200,6 +243,7 @@ const EmployeeForm = () => {
                     errors={errors}
                     touched={touched}
                     onChange={handleChange}
+                    value={values.email}
                   />
                 </InputGrid>
                 <HorizontalLine />
@@ -222,6 +266,7 @@ const EmployeeForm = () => {
                     errors={errors}
                     touched={touched}
                     onChange={handleChange}
+                    value={values.startTime}
                   />
                   <Input
                     label="Ends In"
@@ -230,6 +275,7 @@ const EmployeeForm = () => {
                     errors={errors}
                     touched={touched}
                     onChange={handleChange}
+                    value={values.endTime}
                   />
                 </InputGrid>
                 <HorizontalLine />
@@ -252,6 +298,7 @@ const EmployeeForm = () => {
                     errors={errors}
                     touched={touched}
                     onChange={handleChange}
+                    value={values.position}
                   />
                   <InputWrapper>
                     <Label>Team</Label>
@@ -305,6 +352,7 @@ const EmployeeForm = () => {
                         name="billableHours"
                         placeholder="Enter Billable Hours"
                         onChange={handleChange}
+                        value={values.billableHours}
                       />
                       <HourText>Hours</HourText>
                     </HoursInputWrapper>

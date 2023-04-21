@@ -7,7 +7,7 @@ import useBoolean from "@/helpers/hooks/useBoolean";
 import { AppContext } from "@/provider/AppProvider";
 import { ColumnDef, Row } from "@tanstack/react-table";
 import { useRouter } from "next/router";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { FaPen } from "react-icons/fa";
 import { FiSearch } from "react-icons/fi";
 import { IoMdAdd } from "react-icons/io";
@@ -29,6 +29,8 @@ import { IEmployeeData } from "./Employee.schema";
 const EmployeeTable = () => {
   const { toggle: toggleModal, value: isOpen } = useBoolean();
   const { toggle: toggleCanvas, value: isCanvasOpen } = useBoolean();
+  const [selectedEmployee, setSelectedEmployee] =
+    useState<IEmployeeData | null>(null);
   const { employees, deleteEmployee } = useContext(AppContext);
   const router = useRouter();
   const defaultColumns: ColumnDef<IEmployeeData>[] = [
@@ -38,15 +40,7 @@ const EmployeeTable = () => {
     },
     {
       header: "Full Name",
-      cell: ({ row }: { row: Row<IEmployeeData> }) => {
-        return (
-          <>
-            {[row.original.name, row.original.middleName, row.original.surName]
-              .filter(Boolean)
-              .join(" ")}
-          </>
-        );
-      },
+      accessorKey: "fullName",
     },
     {
       header: "Current Team",
@@ -72,16 +66,18 @@ const EmployeeTable = () => {
     },
     {
       header: "Actions",
-      cell: () => {
+      cell: ({ row }: { row: Row<IEmployeeData> }) => {
         return (
           <TableActions
             handleDelete={() => {
+              setSelectedEmployee(row.original);
               toggleModal();
             }}
             handleEdit={() => {
-              router.push("/employee/edit/teamId");
+              router.push(`/employee/edit/${row.original.id}`);
             }}
             handleView={() => {
+              setSelectedEmployee(row.original);
               toggleCanvas();
             }}
           />
@@ -94,32 +90,47 @@ const EmployeeTable = () => {
     <>
       <DeleteModal
         isOpen={isOpen}
-        modalBody={""}
+        modalBody={
+          <>
+            Are you sure you want to delete{" "}
+            <strong>{selectedEmployee?.fullName}</strong> from the list?
+          </>
+        }
         modalTitle="Delete Employee"
-        onCancel={() => {}}
-        onSubmit={() => {}}
+        onCancel={() => {
+          setSelectedEmployee(null);
+        }}
+        onSubmit={() => {
+          if (selectedEmployee?.id) deleteEmployee(selectedEmployee.id);
+        }}
         toggleModal={toggleModal}
       />
       <OffCanvas
         body={
           <>
-            <EmployeeImageView alt={""} src={""} className="employee-margin" />
-            <EmployeeName>Naresh Ban</EmployeeName>
-            <EmployeeEmail>demo@gmail.com</EmployeeEmail>
-            <DesignationBadge>Employee</DesignationBadge>
+            <EmployeeImageView
+              alt={""}
+              src={selectedEmployee?.photo ?? ""}
+              className="employee-margin"
+              width={120}
+              height={120}
+            />
+            <EmployeeName>{selectedEmployee?.fullName}</EmployeeName>
+            <EmployeeEmail>{selectedEmployee?.email}</EmployeeEmail>
+            <DesignationBadge>{selectedEmployee?.role}</DesignationBadge>
             <HorizontalLine />
             <EmployeeDetailGrid>
               <EmployeeDetailContainer>
                 <EmployeeDetailTitle>Designation</EmployeeDetailTitle>
-                <EmployeeDetail></EmployeeDetail>
+                <EmployeeDetail>{selectedEmployee?.position}</EmployeeDetail>
               </EmployeeDetailContainer>
               <EmployeeDetailContainer>
                 <EmployeeDetailTitle>Contact</EmployeeDetailTitle>
-                <EmployeeDetail></EmployeeDetail>
+                <EmployeeDetail>{selectedEmployee?.phoneNumber}</EmployeeDetail>
               </EmployeeDetailContainer>
               <EmployeeDetailContainer>
                 <EmployeeDetailTitle>Address</EmployeeDetailTitle>
-                <EmployeeDetail></EmployeeDetail>
+                <EmployeeDetail>{selectedEmployee?.address}</EmployeeDetail>
               </EmployeeDetailContainer>
             </EmployeeDetailGrid>
 
@@ -127,22 +138,26 @@ const EmployeeTable = () => {
             <EmployeeDetailGrid>
               <EmployeeDetailContainer>
                 <EmployeeDetailTitle>Start Date</EmployeeDetailTitle>
-                <EmployeeDetail></EmployeeDetail>
+                <EmployeeDetail>{selectedEmployee?.startDate}</EmployeeDetail>
               </EmployeeDetailContainer>
               <EmployeeDetailContainer>
                 <EmployeeDetailTitle>Role</EmployeeDetailTitle>
-                <EmployeeDetail></EmployeeDetail>
+                <EmployeeDetail>{selectedEmployee?.role}</EmployeeDetail>
               </EmployeeDetailContainer>
               <EmployeeDetailContainer>
                 <EmployeeDetailTitle>Billable Status</EmployeeDetailTitle>
-                <EmployeeDetail></EmployeeDetail>
+                <EmployeeDetail>
+                  {selectedEmployee?.isBillable ? "Billable" : "Not Billable"}
+                </EmployeeDetail>
               </EmployeeDetailContainer>
               <EmployeeDetailContainer>
                 <EmployeeDetailTitle>Billable Hours</EmployeeDetailTitle>
-                <EmployeeDetail></EmployeeDetail>
+                <EmployeeDetail>
+                  {selectedEmployee?.billableHours}
+                </EmployeeDetail>
               </EmployeeDetailContainer>
             </EmployeeDetailGrid>
-            <EditProfileButton href={"/employee/edit/empId"}>
+            <EditProfileButton href={`/employee/edit/${selectedEmployee?.id}`}>
               <FaPen size={16} />
               Edit Profile
             </EditProfileButton>
@@ -150,7 +165,10 @@ const EmployeeTable = () => {
         }
         isOpen={isCanvasOpen}
         title="Employee Information"
-        toggleModal={toggleCanvas}
+        toggleModal={() => {
+          toggleCanvas();
+          setSelectedEmployee(null);
+        }}
       />
       <EmployeeSearchBar>
         <Input icon={<FiSearch />} placeholder="Search Item" name="search" />

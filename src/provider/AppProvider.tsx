@@ -1,13 +1,14 @@
+import { IEmployeeData } from "@/core/Employee/Employee.schema";
 import { createContext, useCallback } from "react";
 
 import React, { useEffect, useMemo, useState } from "react";
 
 export interface IAppProviderContext {
-  employees: Array<any>;
+  employees: Array<IEmployeeData>;
   teams: Array<any>;
-  addEmployee: (employeeData: any) => void;
-  deleteEmployee: (empId: any) => void;
-  getEmployee: (empId: any) => void;
+  addEmployee: (employeeData: IEmployeeData) => void;
+  deleteEmployee: (empId: number) => void;
+  getEmployee: (empId: number) => IEmployeeData | undefined;
   getEmployeeCount: () => number;
   getTeamCount: () => number;
 }
@@ -15,9 +16,9 @@ export interface IAppProviderContext {
 export const AppContext = createContext<IAppProviderContext>({
   employees: [],
   teams: [],
-  addEmployee: (employeeData: any) => {},
-  deleteEmployee: () => {},
-  getEmployee: () => {},
+  addEmployee: (employeeData: IEmployeeData) => {},
+  deleteEmployee: (empId: number) => {},
+  getEmployee: (empId: number) => undefined,
   getEmployeeCount: () => 0,
   getTeamCount: () => 0,
 });
@@ -27,7 +28,7 @@ interface Props {
 }
 
 export function AppProvider(props: Props) {
-  const [employees, setEmployees] = useState<any>([]);
+  const [employees, setEmployees] = useState<IEmployeeData[]>([]);
   const [teams, setTeams] = useState<any>(null);
 
   useEffect(() => {
@@ -37,22 +38,21 @@ export function AppProvider(props: Props) {
   }, []);
 
   const addEmployee = (employeeData: any) => {
-    const allEmployees = [...employees];
-    const newEmployeeData = {
-      id: Date.now(),
-      ...employeeData,
-    };
-    const newEmployeeList = [...allEmployees, newEmployeeData];
+    const newEmployeeList = [...employees, employeeData];
     console.log(newEmployeeList);
     setEmployees([...newEmployeeList]);
     localStorage.setItem("employees", JSON.stringify([...newEmployeeList]));
   };
   const deleteEmployee = (empId: any) => {
-    // setEmployees([]);
-    // localStorage.setItem("employees", JSON.stringify([]));
+    const newEmployeeList = [...employees.filter((emp) => emp.id !== empId)];
+    setEmployees([...newEmployeeList]);
+    localStorage.setItem("employees", JSON.stringify([...newEmployeeList]));
   };
-  const getEmployee = (empId: any) => {
-    return {};
+  const getEmployee = (empId: number) => {
+    console.log(employees, empId);
+    const employeeById = employees.find((emp) => emp.id === empId);
+    console.log(employeeById);
+    return employeeById;
   };
 
   const getEmployeeCount = useCallback(() => {
