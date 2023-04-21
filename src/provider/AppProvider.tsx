@@ -43,7 +43,8 @@ export function AppProvider(props: Props) {
   const [teams, setTeams] = useState<ITeamData[]>([]);
 
   useEffect(() => {
-    const employees = JSON.parse(localStorage.getItem("employees") ?? "") || [];
+    const employees =
+      JSON.parse(localStorage.getItem("employees") ?? "[]") || [];
     setEmployees(employees);
     const teams = JSON.parse(localStorage.getItem("teams") ?? "[]") || [];
     setTeams(teams);
