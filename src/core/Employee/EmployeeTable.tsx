@@ -11,6 +11,7 @@ import { useContext, useState } from "react";
 import { FaPen } from "react-icons/fa";
 import { FiSearch } from "react-icons/fi";
 import { IoMdAdd } from "react-icons/io";
+import { EmployeeRoles, IEmployeeData } from "./Employee.schema";
 import {
   AddEmployeeButton,
   DesignationBadge,
@@ -25,7 +26,6 @@ import {
   EmployeeSearchBar,
   HorizontalLine,
 } from "./Employee.styles";
-import { IEmployeeData } from "./Employee.schema";
 const EmployeeTable = () => {
   const { toggle: toggleModal, value: isOpen } = useBoolean();
   const { toggle: toggleCanvas, value: isCanvasOpen } = useBoolean();
@@ -45,7 +45,7 @@ const EmployeeTable = () => {
     {
       header: "Current Team",
       cell: ({ row }: { row: Row<IEmployeeData> }) => {
-        return <>{row.original.team ? row.original.team : "Available"}</>;
+        return <>{row.original.team ? "Not Available" : "Available"}</>;
       },
     },
     {
@@ -117,7 +117,13 @@ const EmployeeTable = () => {
             />
             <EmployeeName>{selectedEmployee?.fullName}</EmployeeName>
             <EmployeeEmail>{selectedEmployee?.email}</EmployeeEmail>
-            <DesignationBadge>{selectedEmployee?.role}</DesignationBadge>
+            <DesignationBadge>
+              {
+                EmployeeRoles.find(
+                  (role) => role.value === selectedEmployee?.role
+                )?.label
+              }
+            </DesignationBadge>
             <HorizontalLine />
             <EmployeeDetailGrid>
               <EmployeeDetailContainer>

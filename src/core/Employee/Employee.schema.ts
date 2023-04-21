@@ -58,11 +58,15 @@ export const employeeValidationSchema = Yup.object({
   position: Yup.string().trim().required("This is required"),
   isBillable: Yup.boolean(),
   photo: Yup.string().trim().required("This is required"),
-  billableHours: Yup.string()
-    .when("isBillable", {
-      is: true,
-      otherwise: Yup.string().trim().required("This is required"),
-      then: Yup.string().trim().required("This is required"),
-    })
-    .required("This is required"),
+  billableHours: Yup.string().when("isBillable", {
+    is: true,
+    then: Yup.string().trim().required("This is required"),
+    otherwise: Yup.string().notRequired(),
+  }),
 });
+export const EmployeeRoles = [
+  { label: "Admin", value: "Admin" },
+  { label: "Super Admin", value: "SuperAdmin" },
+  { label: "Staff", value: "Staff" },
+  { label: "Reviewer", value: "Reviewer" },
+];

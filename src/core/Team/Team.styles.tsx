@@ -59,3 +59,43 @@ export const EmployeeSelectBadge = styled.span`
   align-items: center;
   gap: 0.5rem;
 `;
+
+export const EmployeeOption = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+export const QRButtons = styled.button<{ color: string }>`
+  border-radius: 0.313rem;
+  background-color: transparent;
+  color: ${(props) => props.color};
+  border: 1px solid ${(props) => props.color};
+  padding: 0.5rem 1rem;
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  cursor: pointer;
+`;
+
+export const QRContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+`;
+
+export const QRButtonsContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+`;
+
+export const QRCodeContainer = styled.div`
+  border: 1px solid #c3c1bf;
+  border-radius: 0.313rem;
+  height: 7.5rem;
+  width: 7.5rem;
+  padding: 0.25rem;
+`;

@@ -6,10 +6,12 @@ import { InputWrapper, Label } from "@/components/FormComponents/Input.styles";
 import ValidationMessage from "@/components/FormComponents/ValidationMessage";
 import { AppContext } from "@/provider/AppProvider";
 import { useFormik } from "formik";
-import React, { useContext, useEffect, useRef, useState } from "react";
+import { useRouter } from "next/router";
+import React, { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { IoMdCloudUpload } from "react-icons/io";
 import Select from "react-select";
 import {
+  EmployeeRoles,
   employeeInitialData,
   employeeValidationSchema,
 } from "./Employee.schema";
@@ -33,17 +35,16 @@ import {
   SaveButton,
   UploadProfileImageButton,
 } from "./Employee.styles";
-import { useRouter } from "next/router";
+
 const EmployeeForm = () => {
   const [formData, setFormData] = useState(employeeInitialData);
-  const { addEmployee, getEmployee } = useContext(AppContext);
+  const { addEmployee, getEmployee, teams, updateEmployee } =
+    useContext(AppContext);
   const router = useRouter();
-  console.log(router.query.id);
 
   useEffect(() => {
     if (router.query.id && !Array.isArray(router.query.id)) {
       const empData = getEmployee(Number(router.query.id));
-      console.log(empData);
       if (empData) setFormData(empData);
     }
   }, [getEmployee, router.query.id]);
@@ -65,16 +66,20 @@ const EmployeeForm = () => {
     onSubmit: (values, { resetForm }) => {
       if (values) {
         if (router.query.id) {
-          //update logic remaining
+          const newEmployeeData = {
+            ...values,
+            fullName: [values.name, values.middleName, values.surName]
+              .filter(Boolean)
+              .join(" "),
+          };
+          updateEmployee(newEmployeeData);
         } else {
-          console.log(values);
           const newEmployeeData = {
             ...values,
             id: Date.now(),
             fullName: [values.name, values.middleName, values.surName]
               .filter(Boolean)
               .join(" "),
-            role: "Staff",
             startDate: new Date().toLocaleDateString(),
           };
           addEmployee(newEmployeeData);
@@ -100,6 +105,22 @@ const EmployeeForm = () => {
     handleFileUpload(e);
   };
 
+  const Genders = [
+    { label: "Male", value: "Male" },
+    { label: "Female", value: "Female" },
+    { label: "Other", value: "Others" },
+  ];
+
+  const teamOptions = useMemo(() => {
+    return teams.map((team) => {
+      return {
+        ...team,
+        label: team.teamName,
+        value: team.id,
+      };
+    });
+  }, [teams]);
+
   return (
     <>
       <EmployeeFormContainer>
@@ -109,7 +130,7 @@ const EmployeeForm = () => {
             leftContent={
               <FlexCenteredWrapper right>
                 <EmployeeImageView
-                  src={values?.photo ?? UserAvatar}
+                  src={values?.photo ? values?.photo : UserAvatar}
                   alt="employee-image"
                   width={120}
                   height={120}
@@ -195,20 +216,14 @@ const EmployeeForm = () => {
                   <InputWrapper>
                     <Label>Gender</Label>
                     <Select
-                      options={[
-                        { label: "Male", value: "Male" },
-                        { label: "Female", value: "Female" },
-                        { label: "Other", value: "Others" },
-                      ]}
+                      options={Genders}
                       placeholder="Choose gender"
                       onChange={(e) => {
                         setFieldValue("gender", e?.value ?? "");
                       }}
-                      value={[
-                        { label: "Male", value: "Male" },
-                        { label: "Female", value: "Female" },
-                        { label: "Other", value: "Others" },
-                      ].find((gender) => gender.value === values?.gender)}
+                      value={Genders.find(
+                        (gender) => gender.value === values?.gender
+                      )}
                     />
                     <ValidationMessage
                       errors={errors}
@@ -303,15 +318,38 @@ const EmployeeForm = () => {
                   <InputWrapper>
                     <Label>Team</Label>
                     <Select
-                      options={[]}
+                      options={teamOptions}
                       placeholder="Choose team"
+                      name="team"
                       onChange={(e: any) => {
-                        setFieldValue("gender", e?.value ?? "");
+                        setFieldValue("team", e?.value ?? "");
                       }}
-                    />{" "}
+                      value={teamOptions.find(
+                        (team) => Number(team.id) === Number(values.team)
+                      )}
+                      isDisabled
+                    />
                     <ValidationMessage
                       errors={errors}
                       name={"team"}
+                      touched={touched}
+                    />
+                  </InputWrapper>
+                  <InputWrapper>
+                    <Label>Role</Label>
+                    <Select
+                      options={EmployeeRoles}
+                      placeholder="Choose role"
+                      onChange={(e) => {
+                        setFieldValue("role", e?.value ?? "");
+                      }}
+                      value={EmployeeRoles.find(
+                        (role) => role.value === values?.role
+                      )}
+                    />{" "}
+                    <ValidationMessage
+                      errors={errors}
+                      name={"role"}
                       touched={touched}
                     />
                   </InputWrapper>
