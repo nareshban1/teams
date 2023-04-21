@@ -89,7 +89,10 @@ const Table = <T extends object>({ columns, data }: TableProps<T>) => {
 
         <PaginationDetails>
           Showing{" "}
-          {getValueFromPageNumber(table.getState().pagination.pageIndex)} to{" "}
+          {table.getPaginationRowModel().rows.length
+            ? getValueFromPageNumber(table.getState().pagination.pageIndex)
+            : 0}{" "}
+          to{" "}
           {getValueFromPageNumber(table.getState().pagination.pageIndex) +
             table.getPaginationRowModel().rows.length -
             1}{" "}

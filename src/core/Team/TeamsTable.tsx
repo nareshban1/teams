@@ -87,7 +87,7 @@ const TeamsTable = () => {
         modalBody={
           <>
             Are you sure you want to delete
-            <strong>{selectedTeam?.teamName}</strong> from the list?
+            <strong> {selectedTeam?.teamName} </strong> from the list?
           </>
         }
         modalTitle="Delete Team"
