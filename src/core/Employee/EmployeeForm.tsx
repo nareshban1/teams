@@ -35,8 +35,8 @@ import {
 } from "./Employee.styles";
 const EmployeeForm = () => {
   const [formData, setFormData] = useState(employeeInitialData);
-  const { employees, setEmployees } = useContext(AppContext);
-  console.log(employees);
+  const { addEmployee } = useContext(AppContext);
+
   const {
     errors,
     touched,
@@ -52,15 +52,8 @@ const EmployeeForm = () => {
     validateOnBlur: true,
     onSubmit: (values) => {
       if (values) {
-        console.log(employees);
-        const allEmployees = [...employees];
-        const newEmployeeData = {
-          id: Date.now(),
-          ...values,
-        };
-        const newEmployeeList = [...allEmployees, newEmployeeData];
-        setEmployees && setEmployees([...newEmployeeList]);
-        localStorage.setItem("employees", JSON.stringify([...newEmployeeList]));
+        console.log(values);
+        addEmployee(values);
       }
     },
   });

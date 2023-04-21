@@ -5,13 +5,11 @@ import { ComponentName, DashboardWrapper } from "./Dashboard.styles";
 
 const Dashboard = () => {
   return (
-    <AppProvider>
-      <DashboardWrapper>
-        <ComponentName>Manage Users</ComponentName>
-        <CardGrid />
-        <TeamEmployeeTab />
-      </DashboardWrapper>{" "}
-    </AppProvider>
+    <DashboardWrapper>
+      <ComponentName>Manage Users</ComponentName>
+      <CardGrid />
+      <TeamEmployeeTab />
+    </DashboardWrapper>
   );
 };
 

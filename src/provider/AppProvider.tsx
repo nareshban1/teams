@@ -5,18 +5,19 @@ import React, { useEffect, useMemo, useState } from "react";
 export interface IAppProviderContext {
   employees: Array<any>;
   teams: Array<any>;
-  setEmployees?: React.Dispatch<any>;
+  addEmployee: (employeeData: any) => void;
   deleteEmployee: (empId: any) => void;
   getEmployee: (empId: any) => void;
   getEmployeeCount: () => number;
-  getTeamCount: () => 0;
+  getTeamCount: () => number;
 }
 
 export const AppContext = createContext<IAppProviderContext>({
   employees: [],
   teams: [],
-  deleteEmployee: (empId: any) => {},
-  getEmployee: (empId: any) => {},
+  addEmployee: (employeeData: any) => {},
+  deleteEmployee: () => {},
+  getEmployee: () => {},
   getEmployeeCount: () => 0,
   getTeamCount: () => 0,
 });
@@ -30,15 +31,21 @@ export function AppProvider(props: Props) {
   const [teams, setTeams] = useState<any>(null);
 
   useEffect(() => {
-    const savedEmployees = JSON.parse(localStorage.getItem("employees") ?? "");
-    setEmployees(savedEmployees);
-    // const savedTeams = JSON.parse(localStorage.getItem("teams") ?? "");
-    // setTeams(savedTeams);
+    const employees =
+      JSON.parse(localStorage.getItem("employees") ?? "[]") || [];
+    setEmployees(employees);
   }, []);
 
-  const updateEmployee = (employeeData: any) => {
-    // setEmployees([]);
-    // localStorage.setItem("employees", JSON.stringify([]));
+  const addEmployee = (employeeData: any) => {
+    const allEmployees = [...employees];
+    const newEmployeeData = {
+      id: Date.now(),
+      ...employeeData,
+    };
+    const newEmployeeList = [...allEmployees, newEmployeeData];
+    console.log(newEmployeeList);
+    setEmployees([...newEmployeeList]);
+    localStorage.setItem("employees", JSON.stringify([...newEmployeeList]));
   };
   const deleteEmployee = (empId: any) => {
     // setEmployees([]);
@@ -61,7 +68,7 @@ export function AppProvider(props: Props) {
       value={{
         employees,
         teams,
-        setEmployees,
+        addEmployee,
         deleteEmployee,
         getEmployee,
         getEmployeeCount,
